@@ -1,24 +1,18 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
     public float senX;
     public float senY;
-
     public Transform orientation;
-    
-    float xRotation;
-    float yRotation;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;   
-    }
 
-    // Update is called once per frame
+    private float xRotation;
+    private float yRotation;
+    
     void Update()
     {
+        Debug.Log("Running PlayerCam");
         float mouseX = Input.GetAxis("Mouse X") * senX * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * senY * Time.deltaTime;
 
