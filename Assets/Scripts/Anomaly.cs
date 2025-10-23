@@ -1,12 +1,22 @@
 using UnityEngine;
 
-public enum Scareiness { NotSpooky, Spooky }
-public enum Obviousness { NotObvious, Obvious }
-
-public class Anomaly : ScriptableObject
+public class Anomaly : MonoBehaviour
 {
-    public string name;
-    public GameObject anomalyObject;
-    //public Scareiness scareiness; 
-    public Obviousness obviousness;
+    public GameObject normalAppearance;
+    public GameObject anomalyAppearance;
+    private bool isActiveAnomaly = false;
+
+    public void SetActiveAnomaly(bool active)
+    {
+        isActiveAnomaly = active;
+        UpdateAppearance();
+    }
+
+    private void UpdateAppearance()
+    {
+        if (normalAppearance != null)
+            normalAppearance.SetActive(!isActiveAnomaly);
+        if (anomalyAppearance != null)
+            anomalyAppearance.SetActive(isActiveAnomaly);
+    }
 }

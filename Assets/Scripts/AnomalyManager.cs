@@ -1,61 +1,43 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.InputSystem;
 
 public class AnomalyManager : MonoBehaviour
 {
-    private List<Anomaly> allAnomalies;
-    private List<Anomaly> availableAnomalies;
+    public List<Anomaly> anomalies;  
+    public float anomalyChance = 0.6f;
     private Anomaly currentAnomaly;
-    //40% chance of no anomaly
-    private float anomalyProbability = 0.4f;
-    // 20% chance of obvious anomaly
-    private float obviousnessProbability = 0.2f;
-
 
     void Start()
     {
-        availableAnomalies = new List<Anomaly>(allAnomalies);
-        ChooseAnomaly();
+        ResetScene();
     }
 
     public void ResetScene()
     {
-        if (currentAnomaly != null && currentAnomaly.anomalyObject != null)
-            currentAnomaly.anomalyObject.SetActive(false);
+        foreach (Anomaly a in anomalies)
+            a.SetActiveAnomaly(false);
 
-        ChooseAnomaly();
+        float roll = Random.value; 
+
+        if (roll <= anomalyChance)
+        {
+            int index = Random.Range(0, anomalies.Count);
+            currentAnomaly = anomalies[index];
+            currentAnomaly.SetActiveAnomaly(true);
+            Debug.Log("Anomaly active!");// FOR TESTING PURPOSES - DELETE LATER
+        }
+        else
+        {
+            currentAnomaly = null;
+            Debug.Log("[No anomaly active.");// FOR TESTING PURPOSES - DELETE LATER
+        }
     }
 
-    void ChooseAnomaly()
+    void Update() // FOR TESTING PURPOSES - DELETE LATER
     {
-        
-        if (Random.value < anomalyProbability)
-        {
-            currentAnomaly = null; // Add to this?? 
-            // Trigger for level update ?? 
-            return;
-        }
-
-        Obviousness chosenObviousness = Random.value < obviousnessProbability ? Obviousness.Obvious : Obviousness.Subtle;
-
-        var potential = availableAnomalies
-            .Where(a => a.obviousness == chosenObviousness).ToList();
-
-        if (potential.Count == 0)
-        {
-            if (availableAnomalies.Count == 0)
-                availableAnomalies = new List<Anomaly>(allAnomalies);
-
-            potential = availableAnomalies;
-        }
-
-        currentAnomaly = potential[Random.Range(0, potential.Count)];
-        availableAnomalies.Remove(currentAnomaly);
-
-        if (currentAnomaly.anomalyPrefab != null)
-        {
-            currentAnomaly.anomalyObject.SetActive(true); // Make sure this works
-        }
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+            //Debug.Log("SceneReset!");
+            ResetScene();
     }
 }
