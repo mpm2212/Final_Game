@@ -6,8 +6,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 6f;
     [SerializeField] private Transform orientation;
     
-    private horizontalInput;
-    private verticalInput;
+    private int horizontalInput;
+    private int verticalInput;
     private Vector3 moveDirection;
     private Rigidbody rb;
 
