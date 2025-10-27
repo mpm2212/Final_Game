@@ -3,59 +3,81 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class AnomalyManager : MonoBehaviour
-{
-    private List<Anomaly> allAnomalies;
+{// delete debug logs post testing !!!
+    [SerializeField] private float anomalyChance = 0.6f; // 60% chance of an anomaly
+    [SerializeField] private float obviousnessChance = 0.2f; // 20% obvious 80% not 
+    private List<Anomaly> allAnomalies; 
     private List<Anomaly> availableAnomalies;
     private Anomaly currentAnomaly;
-    //40% chance of no anomaly
-    private float anomalyProbability = 0.4f;
-    // 20% chance of obvious anomaly
-    private float obviousnessProbability = 0.2f;
 
+    void Awake()
+    {
+        allAnomalies = FindObjectsOfType<Anomaly>().ToList();
+        Debug.Log($"found {allAnomalies.Count} anomalies in scene");
+        RefillAvailableAnomalies();
+    }
 
-    void Start()
+    public void DeactivateAllAnomalies()
+    {
+        foreach (var anomaly in allAnomalies.Where(a => a != null))
+        {
+            anomaly.SetActiveAnomaly(false);
+        }
+        currentAnomaly = null;
+    }
+
+    public bool TrySpawnAnomaly(bool forceSpawn = false)
+    {
+        if (allAnomalies == null || allAnomalies.Count == 0)
+        {
+            Debug.LogWarning("No anomalies available!");
+            return false;
+        }
+
+        if (!forceSpawn && Random.value > anomalyChance)
+        {
+            Debug.Log("no anomaly this scene");
+            return false;
+        }
+
+        if (availableAnomalies.Count == 0)
+        {
+            Debug.Log("refilling anomalies");
+            RefillAvailableAnomalies();
+        }
+
+        bool wantObvious = Random.value < obviousnessChance;
+        Obviousness targetObviousness = wantObvious ? Obviousness.Obvious : Obviousness.NotObvious;
+
+        var potentialAnomalies = availableAnomalies
+            .Where(a => a != null && a.obviousness == targetObviousness).ToList();
+
+        if (potentialAnomalies.Count == 0)
+        {
+            potentialAnomalies = availableAnomalies.Where(a => a != null).ToList();
+            Debug.Log($"no {targetObviousness} anomalies available, using remaining");
+        }
+
+        if (potentialAnomalies.Count > 0)
+        {
+            int randomIndex = Random.Range(0, potentialAnomalies.Count);
+            currentAnomaly = potentialAnomalies[randomIndex];
+            
+            availableAnomalies.Remove(currentAnomaly);
+            currentAnomaly.SetActiveAnomaly(true);
+            
+            Debug.Log($"spawned anomaly: {currentAnomaly.name} ({currentAnomaly.obviousness}) - {availableAnomalies.Count} left");
+            return true;
+        }
+
+        Debug.Log("UHOHJOno valid anomalies to spawn.");
+        return false;
+    }
+
+    private void RefillAvailableAnomalies()
     {
         availableAnomalies = new List<Anomaly>(allAnomalies);
-        ChooseAnomaly();
+        Debug.Log("refilled anomalies");
     }
 
-    public void ResetScene()
-    {
-        if (currentAnomaly != null && currentAnomaly.anomalyObject != null)
-            currentAnomaly.anomalyObject.SetActive(false);
-
-        ChooseAnomaly();
-    }
-
-    void ChooseAnomaly()
-    {
-        
-        if (Random.value < anomalyProbability)
-        {
-            currentAnomaly = null; // Add to this?? 
-            // Trigger for level update ?? 
-            return;
-        }
-
-        Obviousness chosenObviousness = Random.value < obviousnessProbability ? Obviousness.Obvious : Obviousness.Subtle;
-
-        var potential = availableAnomalies
-            .Where(a => a.obviousness == chosenObviousness).ToList();
-
-        if (potential.Count == 0)
-        {
-            if (availableAnomalies.Count == 0)
-                availableAnomalies = new List<Anomaly>(allAnomalies);
-
-            potential = availableAnomalies;
-        }
-
-        currentAnomaly = potential[Random.Range(0, potential.Count)];
-        availableAnomalies.Remove(currentAnomaly);
-
-        if (currentAnomaly.anomalyPrefab != null)
-        {
-            currentAnomaly.anomalyObject.SetActive(true); // Make sure this works
-        }
-    }
 }
