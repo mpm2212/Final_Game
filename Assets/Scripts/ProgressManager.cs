@@ -3,14 +3,11 @@ using UnityEngine.Events;
 
 public class ProgressManager : MonoBehaviour
 {
-    //[SerializeField] private GameObject[] clockPrefabs;
-    //[SerializeField] private Transform clockParent;
     [SerializeField] private int maxProgress = 5;
     public UnityEvent<int> OnProgressChanged;
     public UnityEvent OnProgressReset;
     public UnityEvent OnMaxProgressReached;
     private int currentProgress = 0;
-    //private GameObject currentClockInstance;
 
     void Start()
     {
@@ -20,60 +17,35 @@ public class ProgressManager : MonoBehaviour
     public void CorrectGuess()
     {
         currentProgress++;
-        Debug.Log($"Correct! Progress: {currentProgress}");
+        Debug.Log($"correct! progress: {currentProgress}");
         
         OnProgressChanged?.Invoke(currentProgress);
         //UpdateClock();
         
         if (currentProgress >= maxProgress)
         {
-            Debug.Log("Max progress reached!");
+            Debug.Log("max progress reached");
             OnMaxProgressReached?.Invoke();
         }
     }
 
     public void IncorrectGuess()
     {
-        Debug.Log($"Incorrect! Progress reset from {currentProgress} to 0");
+        Debug.Log($"incorrect! progress reset from {currentProgress} to 0");
         currentProgress = 0;
         
         OnProgressReset?.Invoke();
         OnProgressChanged?.Invoke(currentProgress);
-        //UpdateClock();
     }
 
     private void InitializeClock()
     {
-        //UpdateClock();
+        
     }
 
     private void UpdateClock()
     {
-        // Destroy current clock if it exists
-        //if (currentClockInstance != null)
-        //{
-            //DestroyImmediate(currentClockInstance);
-        //}
-
-        // Spawn new clock based on progress
-        //if (clockPrefabs != null && currentProgress < clockPrefabs.Length && clockPrefabs[currentProgress] != null)
-        //{
-            //Vector3 spawnPosition = clockParent != null ? clockParent.position : Vector3.zero;
-            //Quaternion spawnRotation = clockParent != null ? clockParent.rotation : Quaternion.identity;
-            
-            //currentClockInstance = Instantiate(clockPrefabs[currentProgress], spawnPosition, spawnRotation);
-            
-            //if (clockParent != null)
-            //{
-                //currentClockInstance.transform.SetParent(clockParent, false);
-            //}
-            
-            Debug.Log($"Clock updated to: {GetTimeString()}");
-        //}
-        //else
-        //{
-            Debug.LogWarning($"No clock prefab available for progress level {currentProgress}");
-        //}
+        Debug.Log($"clock updated to: {GetTimeString()}");
     }
 
     private string GetTimeString()
