@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class HallwayLoop : MonoBehaviour
+public class Teleportation : MonoBehaviour
 {
 
     public Transform TeleportTarget;
     private static bool canTeleport = true;
-    private float coolDownTime = 1f;
+    [SerializeField] float coolDownTime = 2f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -29,9 +29,11 @@ public class HallwayLoop : MonoBehaviour
 
     private IEnumerator TeleportCooldown()
     {
+        Debug.Log("Teleport false");
         canTeleport = false;
         yield return new WaitForSeconds(coolDownTime);
         canTeleport = true;
+        Debug.Log("Teleport true");
     }
 
 }
