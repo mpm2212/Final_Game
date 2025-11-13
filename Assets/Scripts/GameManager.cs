@@ -3,17 +3,23 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
     private AnomalyManager anomalyManager;
     private ProgressManager progressManager;
 
-    void Awake()
-    {
-        anomalyManager = FindObjectOfType<AnomalyManager>();
-        progressManager = FindObjectOfType<ProgressManager>();
-    }
-
     void Start()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+        
+        anomalyManager = FindObjectOfType<AnomalyManager>();
+        progressManager = FindObjectOfType<ProgressManager>();
+
         ResetScene(forceNoAnomaly: true); 
     }
 

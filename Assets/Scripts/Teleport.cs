@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TeleportArch : MonoBehaviour
+public class Teleport : MonoBehaviour
 {
     public Transform otherArch;
     public Transform thisArch;
@@ -17,6 +17,15 @@ public class TeleportArch : MonoBehaviour
             Vector3 targetPosition = otherArch.TransformPoint(rotatedOffset);
 
             other.transform.position = targetPosition;
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.ResetScene();
+            }
+            else
+            {
+                Debug.LogWarning("GameManager instance not found.");
+            }
         }
     }
 }
