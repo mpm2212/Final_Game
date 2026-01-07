@@ -98,27 +98,4 @@ public class ProgressManager : MonoBehaviour
     {
         return currentProgress >= maxProgress;
     }
-
-    [System.Serializable]
-    public class HourRotation
-    {
-        public int hour;
-        public Vector3 rotation;
-    }
-
-    [SerializeField] private HourRotation[] inspectorHourRotations;
-
-    void OnValidate()
-    {
-        if (inspectorHourRotations != null && inspectorHourRotations.Length > 0)
-        {
-            for (int i = 0; i < inspectorHourRotations.Length && i < hourRotations.Length; i++)
-            {
-                if (inspectorHourRotations[i].hour >= 0 && inspectorHourRotations[i].hour < hourRotations.Length)
-                {
-                    hourRotations[inspectorHourRotations[i].hour] = inspectorHourRotations[i].rotation;
-                }
-            }
-        }
-    }
 }

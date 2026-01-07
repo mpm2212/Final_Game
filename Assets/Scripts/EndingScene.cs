@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class EndingScene : MonoBehaviour
 {
     public CanvasGroup fadeOut;
     public float fadeDuration = 2f;
+    public float holdDuration = 4f;
+    public string startSceneName = "StartingScene";
     public string playerTag = "Player";
     private bool hasTriggered = false;
     [SerializeField] private AudioClip winningSound;
@@ -19,7 +22,7 @@ public class EndingScene : MonoBehaviour
         }
     }
 
-   private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (hasTriggered) return;
         if (!other.CompareTag(playerTag)) return;
@@ -52,6 +55,10 @@ public class EndingScene : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / fadeDuration);
             fadeOut.alpha = Mathf.Lerp(startAlpha, finalAlpha, t);
             yield return null;
-        } 
+        }
+
+        yield return new WaitForSeconds(holdDuration);
+
+        SceneManager.LoadScene(startSceneName);
     }
 }

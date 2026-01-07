@@ -6,14 +6,32 @@ public class AnomalyManager : MonoBehaviour
 {
     [SerializeField] private float anomalyChance = 0.6f;
     [SerializeField] private float obviousnessChance = 0.2f;
+    private float originalAnomalyChance;
+    private float originalObviousnessChance;
+    
     private List<Anomaly> allAnomalies; 
     private List<Anomaly> availableAnomalies;
     private Anomaly currentAnomaly;
 
     void Awake()
     {
+        originalAnomalyChance = anomalyChance;
+        originalObviousnessChance = obviousnessChance;
+        
         allAnomalies = FindObjectsOfType<Anomaly>().ToList();
         RefillAvailableAnomalies();
+    }
+
+    public void UpdateDifficulty(int currentProgress)
+    {
+        if (currentProgress >= 3)
+        {
+            anomalyChance = 0.25f;
+        }
+        else
+        {
+            anomalyChance = originalAnomalyChance;
+        }
     }
 
     public void DeactivateAllAnomalies()
@@ -76,5 +94,4 @@ public class AnomalyManager : MonoBehaviour
     {
         return currentAnomaly;
     }
-
 }

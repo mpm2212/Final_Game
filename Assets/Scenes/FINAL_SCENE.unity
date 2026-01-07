@@ -62516,7 +62516,6 @@ MonoBehaviour:
   OnMaxProgressReached:
     m_PersistentCalls:
       m_Calls: []
-  inspectorHourRotations: []
 --- !u!1001 &570186133066332281
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69775,6 +69774,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EndingScene
   fadeOut: {fileID: 5318833811054923385}
   fadeDuration: 2
+  holdDuration: 5
+  startSceneName: StartingScene
   playerTag: Player
   winningSound: {fileID: 8300000, guid: 2a731ee32fd6c4ec78fa5d70c79aef27, type: 3}
 --- !u!1001 &3074914778348866021
@@ -86401,6 +86402,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EndingScene
   fadeOut: {fileID: 5318833811054923385}
   fadeDuration: 2
+  holdDuration: 5
+  startSceneName: StartingScene
   playerTag: Player
   winningSound: {fileID: 8300000, guid: 2a731ee32fd6c4ec78fa5d70c79aef27, type: 3}
 --- !u!1001 &7897738661218567488

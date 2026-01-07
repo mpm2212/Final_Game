@@ -48,53 +48,58 @@ public class GameManager : MonoBehaviour
     }
 
     public void PlayerGuess(bool foundAnomaly)
+{
+    if (progressManager == null) 
     {
-        if (progressManager == null) 
-        {
-            RefreshManagers();
-            if (progressManager == null) return;
-        }
-
-        OnPlayerGuess?.Invoke();
-
-        Anomaly currentAnomaly = anomalyManager?.GetCurrentAnomaly();
-        bool anomalyExists = currentAnomaly != null;
-        bool correctGuess = false;
-        
-        if (anomalyExists)
-        {
-            if (foundAnomaly)
-            {
-                correctGuess = true;
-            }
-            else
-            {
-                correctGuess = false;
-            }
-        }
-        else
-        {
-            if (!foundAnomaly)
-            {
-                correctGuess = true;
-            }
-            else
-            {
-                correctGuess = false;
-            }
-        }
-
-        if (correctGuess)
-        {
-            progressManager.CorrectGuess();
-        }
-        else
-        {
-            progressManager.IncorrectGuess();
-        }
-
-        ResetScene();
+        RefreshManagers();
+        if (progressManager == null) return;
     }
+
+    OnPlayerGuess?.Invoke();
+
+    Anomaly currentAnomaly = anomalyManager?.GetCurrentAnomaly();
+    bool anomalyExists = currentAnomaly != null;
+    bool correctGuess = false;
+    
+    if (anomalyExists)
+    {
+        if (foundAnomaly)
+        {
+            correctGuess = true;
+        }
+        else
+        {
+            correctGuess = false;
+        }
+    }
+    else
+    {
+        if (!foundAnomaly)
+        {
+            correctGuess = true;
+        }
+        else
+        {
+            correctGuess = false;
+        }
+    }
+
+    if (correctGuess)
+    {
+        progressManager.CorrectGuess();
+    }
+    else
+    {
+        progressManager.IncorrectGuess();
+    }
+    
+    if (anomalyManager != null && progressManager != null)
+    {
+        anomalyManager.UpdateDifficulty(progressManager.GetCurrentProgress());
+    }
+
+    ResetScene();
+}
     
     public bool IsAtMaxProgress()
     {
